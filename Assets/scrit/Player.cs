@@ -18,12 +18,14 @@ public class Player : MonoBehaviour
 
     public PlayerStats playerStats;
 
+    public int money = 100;
     public float step = 5;
     public float delay;
     public bool ableMove = true;
     public Vector2 moveInput;
 
     public Vector2 MapLimits = new Vector2(10, 8);
+    public Store Store;
     private void Awake()
     {
         input = new();
@@ -35,13 +37,14 @@ public class Player : MonoBehaviour
         input.Player.Move.started += OnMove;
         input.Player.Move.performed += OnMove;
         input.Player.Move.canceled += OnMove;
+        input.Player.Interact.started += OnInteract;
     }
     private void OnDisable()
     {
         input.Player.Move.started -= OnMove;
         input.Player.Move.performed -= OnMove;
         input.Player.Move.canceled -= OnMove;
-
+        input.Player.Interact.performed -= OnInteract;
         input.Disable();
     }
     private void OnMove(InputAction.CallbackContext context)
@@ -49,6 +52,23 @@ public class Player : MonoBehaviour
         moveInput = context.ReadValue<Vector2>();
         MovementMechanic(moveInput);
 
+    }
+
+    private void OnInteract(InputAction.CallbackContext context) 
+    { 
+         try
+         {
+            Store.BuyItem(this);
+            Debug.Log("!Compra realizada, se gasto " + money + "¡");
+         }
+        catch (Exception eX)
+         {
+            Debug.LogWarning("No se pudo relizar la compra" + eX);
+         } 
+         
+              
+       
+    
     }
     void Start()
     {
