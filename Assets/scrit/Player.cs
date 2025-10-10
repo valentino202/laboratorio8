@@ -6,7 +6,6 @@ using UnityEngine.InputSystem;
 [Serializable]
 public class PlayerStats
 {
-
     public int Life;
     public int Atk;
 }
@@ -26,6 +25,7 @@ public class Player : MonoBehaviour
 
     public Vector2 MapLimits = new Vector2(10, 8);
     public Store Store;
+    public Inventory Inventory = new Inventory();
     private void Awake()
     {
         input = new();
@@ -38,6 +38,7 @@ public class Player : MonoBehaviour
         input.Player.Move.performed += OnMove;
         input.Player.Move.canceled += OnMove;
         input.Player.Interact.started += OnInteract;
+        input.Player.UsePotion.started += OnUsePotion;
     }
     private void OnDisable()
     {
@@ -45,6 +46,7 @@ public class Player : MonoBehaviour
         input.Player.Move.performed -= OnMove;
         input.Player.Move.canceled -= OnMove;
         input.Player.Interact.performed -= OnInteract;
+        input.Player.UsePotion.performed -= OnUsePotion;
         input.Disable();
     }
     private void OnMove(InputAction.CallbackContext context)
@@ -64,11 +66,20 @@ public class Player : MonoBehaviour
         catch (Exception eX)
          {
             Debug.LogWarning("No se pudo relizar la compra" + eX);
-         } 
-         
-              
-       
-    
+         }
+    }
+
+    private void OnUsePotion(InputAction.CallbackContext context)
+    {
+        try
+        {
+            Inventory.UsePotion();
+        }
+
+        catch (Exception ex)
+        {
+            Debug.LogWarning("No se pudo usar la poción: " + ex);
+        }
     }
     void Start()
     {

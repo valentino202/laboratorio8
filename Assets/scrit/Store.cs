@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class Store : MonoBehaviour
@@ -12,7 +13,16 @@ public class Store : MonoBehaviour
     {
         if (player.money >= _ObjectPrice)
         {
-            player.money -= _ObjectPrice;
+            try
+            {
+               player.money -= _ObjectPrice;
+               player.Inventory.AddPtion();
+            }
+            catch( Exception ex)
+            {
+                Debug.LogWarning("No se pudo agregar la poción: " + ex.Message);
+            }
+           
         }
         else
         {
